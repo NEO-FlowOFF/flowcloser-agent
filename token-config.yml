@@ -1,0 +1,95 @@
+# Token Configuration Template
+
+token:
+  name: "FlowCloser"
+  symbol: "NEOFLW"
+  decimals: 18  # ✅ CONFIRMADO
+  total_supply: 1000000000  # ✅ CONFIRMADO - 1 bilhão de tokens
+  standard: "ERC20"  # ✅ CONFIRMADO 
+
+  # Contract Addresses
+  contracts:
+    main: "0x2Dd669407Ab779724f2b38b54A4322aA40C55e67"  # ✅ CONFIRMADO
+    agent: "0x6C3E3a7aE71AFaf30C89471Cf3080b62a1ad41E4"  # ✅ CONFIRMADO
+    contract: "0x2Dd669407Ab779724f2b38b54A4322aA40C55e67"  # ✅ CONFIRMADO
+    pool: "0x52a435AC95A104F3f611ABbb06CB360CCCCb08AB"  # ✅ CONFIRMADO - BootstrapPool
+    governance: "0x1BCEb28cEef69D7d7A0950CAf77FfC14279E95ee"  # ✅ CONFIRMADO
+
+  # Contract Technical Details
+  contract_details:
+    bootstrap_pool:
+      name: "BootstrapPool"  # ✅ CONFIRMADO
+      address: "0x52a435AC95A104F3f611ABbb06CB360CCCCb08AB"  # ✅ CONFIRMADO
+      compiler_version: "v0.8.25+commit.b61c2a91"  # ✅ CONFIRMADO
+      optimization_enabled: true  # ✅ CONFIRMADO
+      optimization_runs: 832  # ✅ CONFIRMADO
+      evm_version: "shanghai"  # ✅ CONFIRMADO
+
+  # Explorer Links
+  links:  # ✅ CONFIRMADO - Links do projeto FlowCloser no Fraxscan
+    token: "https://fraxscan.com/token/0x6C3E3a7aE71AFaf30C89471Cf3080b62a1ad41E4"  # ✅ CONFIRMADO
+    agent: "https://fraxscan.com/address/0x6C3E3a7aE71AFaf30C89471Cf3080b62a1ad41E4"  # ✅ CONFIRMADO
+    contract: "https://fraxscan.com/address/0x2Dd669407Ab779724f2b38b54A4322aA40C55e67"  # ✅ CONFIRMADO
+    pool: "https://fraxscan.com/address/0x52a435AC95A104F3f611ABbb06CB360CCCCb08AB"  # ✅ CONFIRMADO
+    governance: "https://fraxscan.com/address/0x1BCEb28cEef69D7d7A0950CAf77FfC14279E95ee"  # ✅ CONFIRMADO
+    project: "https://github.com/kauntdewn1/flowcloser-agent"  # ✅ CONFIRMADO
+
+  # Network Information
+  network:
+    name: "Fraxtal MainNet"  # ✅ CONFIRMADO
+    chain_id: 252  # ✅ CONFIRMADO - Fraxtal MainNet Chain ID
+    explorer: "https://fraxscan.com"  # ✅ CONFIRMADO
+    rpc_url: "https://fraxtal-rpc.publicnode.com:443"  # ✅ RPC público da Fraxtal
+    native_token: "FRAX"  # ✅ Fraxtal usa FRAX como token nativo para taxas
+    status: "verified"  # ✅ Contratos verificados no Fraxscan
+
+  # Metadata
+  metadata:
+    avatar: "https://gateway.lighthouse.storage/ipfs/bafkreibtoxrognnshjpk6bhkb6suekmpo46zacqoa7qjxici4oob3f457i"  # ✅ CONFIRMADO - URL do avatar do token
+    logo: "https://gateway.lighthouse.storage/ipfs/bafybeidoo56kllhb6hjtnswhlduf6nbc5so3sl22yiesqt2o25lks6kxjy"  # ✅ CONFIRMADO - URL do logo do token
+    website: "https://flowoff.xyz"  # ✅ CONFIRMADO
+    description: "Token do protocolo NEØ para o FlowCloser - agente AI de conversão de leads em vendas de presença digital"  # ⚠️ BASEADO NO CONTEXTO DO PROJETO
+
+# Project Status
+project_status:
+  contracts: "verified"  # ✅ Contratos verificados no Fraxscan
+  tests: "none"  # ❌ NÃO EXISTEM testes no projeto (nenhum arquivo de teste encontrado)
+  frontend: "not_applicable"  # ✅ Este projeto é apenas backend/API, não possui frontend
+  backend: "complete"  # ✅ API completa e deployada no Railway
+  api: "complete"  # ✅ Endpoints funcionando: /health, /api/agents, /api/webhooks/instagram, /api/auth/instagram/callback
+
+# Pending Tasks
+pending_tasks:
+  - "Atualizar metadata no Fraxscan (se necessário)"
+  - "Adicionar testes unitários para o projeto"
+  - "Adicionar testes de integração para endpoints da API"
+  - "Implementar verificação real do token NEOFLW na ferramenta checkNeoflowTokenTool (atualmente retorna mock)"
+  - "Adicionar integração com blockchain para consulta real de saldos"
+  - "Adicionar suporte para múltiplas redes (se necessário)"
+  - "Documentar processo de deploy do contrato"
+  - "Criar script de verificação do contrato"
+
+# Repository
+repository:
+  url: "https://github.com/kauntdewn1/flowcloser-agent"  # ✅ CONFIRMADO
+  type: "backend"  # ✅ API/Backend apenas
+  deployment: "https://flowcloser-agent-production.up.railway.app"  # ✅ CONFIRMADO
+
+# Additional Information
+additional_info:
+  protocol: "NEØ PROTOCOL™"  # ✅ CONFIRMADO no README
+  agent_name: "FlowCloser"  # ✅ CONFIRMADO
+  agent_purpose: "AI agent trained to convert cold leads into signed deals for digital presence (websites, PWAs, micro SaaS, webapps)"  # ✅ CONFIRMADO
+  iqai_pending_url: "https://app.iqai.com/pending/0x2Dd669407Ab779724f2b38b54A4322aA40C55e67"  # ✅ CONFIRMADO
+  tech_stack:
+    - "TypeScript"
+    - "Express.js"
+    - "@iqai/adk (Agent Development Kit)"
+    - "Railway (Deployment)"
+    - "Instagram Business API"
+  integrations:
+    - "Instagram Webhooks"
+    - "Instagram OAuth"
+    - "OpenAI API (gpt-4o-mini)"
+    - "Google API (gemini-2.5-flash fallback)"
+
