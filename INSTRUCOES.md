@@ -123,6 +123,7 @@ flowcloser_adk-ts/
 │   │       └── callbacks.ts # Callbacks do agente
 │   └── main.ts             # Ponto de entrada da aplicação
 ├── dist/                   # Arquivos compilados (gerado após build)
+├── data/                   # Banco de dados SQLite (criado automaticamente)
 ├── .env                    # Variáveis de ambiente (não commitado)
 ├── .env.example           # Exemplo de variáveis de ambiente
 ├── package.json           # Dependências e scripts
@@ -130,6 +131,8 @@ flowcloser_adk-ts/
 ├── Procfile               # Configuração para Railway
 └── README.md             # Documentação principal
 ```
+
+**Nota:** O diretório `data/` é criado automaticamente quando o servidor inicia. Ele contém o banco de dados SQLite usado para armazenar sessões do agente.
 
 ## 🚢 Deploy
 
@@ -167,6 +170,7 @@ railway variables --set "INSTAGRAM_REDIRECT_URI=https://seu-dominio.up.railway.a
 
 5. **Faça deploy**:
 ```bash
+
 railway up
 ```
 
@@ -175,6 +179,7 @@ O `Procfile` já está configurado para rodar `node dist/main.js` em produção.
 ### Variáveis de Ambiente no Railway
 
 Certifique-se de configurar todas as variáveis necessárias no Railway:
+
 - `IQAI_API_KEY`
 - `OPENAI_API_KEY`
 - `GOOGLE_API_KEY` (opcional)
@@ -195,21 +200,25 @@ Certifique-se de configurar todas as variáveis necessárias no Railway:
 ## 🐛 Troubleshooting
 
 ### Erro de porta já em uso
+
 Se a porta 8042 estiver em uso, altere a variável `PORT` no `.env` ou use:
 ```bash
 PORT=3000 npm run dev
 ```
 
 ### Erro de módulos não encontrados
+
 Certifique-se de ter instalado todas as dependências:
 ```bash
 npm install
 ```
 
 ### Erro de variáveis de ambiente não definidas
+
 Verifique se o arquivo `.env` existe e contém todas as variáveis necessárias. Use `.env.example` como referência.
 
 ### Erro de build
+
 Limpe a pasta `dist` e tente novamente:
 ```bash
 rm -rf dist
