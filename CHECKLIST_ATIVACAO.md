@@ -56,6 +56,7 @@
 ### 3. 🔴 CRÍTICO: Testar Webhooks
 
 **Teste Instagram:**
+
 - [ ] Enviar mensagem para sua conta Instagram conectada
 - [ ] Verificar logs do Railway: `railway logs`
 - [ ] Verificar se bot respondeu
@@ -65,6 +66,7 @@
   - Token está correto?
 
 **Teste WhatsApp:**
+
 - [ ] Enviar mensagem para número do WhatsApp Business
 - [ ] Verificar logs do Railway
 - [ ] Verificar se bot respondeu
@@ -73,9 +75,10 @@
 
 ### 4. 🟡 IMPORTANTE: Configurar Conversions API
 
-**Status:** Código pronto, falta credenciais
+**Status:** Código pronto, falta credenciais3
 
 **O que fazer:**
+
 - [ ] Pegar Pixel ID (ver `COMO_PEGAR_PIXEL_ID.md`)
 - [ ] Gerar Access Token (ver `META_SIMPLIFICADO.md`)
 - [ ] Adicionar no Railway:
@@ -91,6 +94,7 @@
 ### 5. 🟡 IMPORTANTE: Conectar Conta Instagram
 
 **O que fazer:**
+
 - [ ] No Meta Developer Console, ir em **Instagram** → **Configurações**
 - [ ] Conectar sua conta Instagram ao App
 - [ ] Autorizar permissões necessárias

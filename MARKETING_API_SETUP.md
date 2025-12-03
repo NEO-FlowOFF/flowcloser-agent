@@ -35,6 +35,7 @@ A **Conversions API** do Meta permite:
 ### 2. Obter Access Token
 
 **Método 1 (Recomendado):**
+
 1. No Meta Developer Console: https://developers.facebook.com/apps/
 2. Selecione seu App (`2706639773011042`)
 3. No menu lateral, procure **Tools** ou **Ferramentas**
