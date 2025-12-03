@@ -13,6 +13,18 @@ export const qualifyLeadTool: BaseTool = createTool({
 	description: "Track lead qualification whenever you detect buying intent, budget mentions, timeline, or pain points",
 	schema: qualifyLeadSchema as z.ZodSchema<z.infer<typeof qualifyLeadSchema>>,
 	fn: async (params) => {
+		// Rastrear conversão na Meta Conversions API
+		try {
+			const { trackLeadQualified } = await import("./conversions.js");
+			// Obter userId do contexto se disponível
+			const userId = (globalThis as any).currentUserId || "unknown";
+			const channel = (globalThis as any).currentChannel || "unknown";
+			await trackLeadQualified(userId, channel);
+		} catch (error) {
+			// Não quebrar se Conversions API não estiver configurada
+			console.warn("Conversions API não disponível:", error);
+		}
+
 		return {
 			success: true,
 			message: "Lead qualification tracked",

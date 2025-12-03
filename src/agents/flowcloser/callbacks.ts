@@ -76,6 +76,12 @@ export async function afterModelCallback(args: {
 		},
 	);
 	
+	// Rastrear visualização de portfólio se mencionado na resposta
+	if (responseText.includes("canva.com") || responseText.includes(process.env.PORTFOLIO_URL || "")) {
+		const { trackPortfolioView } = await import("./conversions.js");
+		await trackPortfolioView(userId, channel);
+	}
+
 	// Aqui você pode adicionar outras automações:
 	// - Enviar para webhook externo
 	// - Atualizar CRM

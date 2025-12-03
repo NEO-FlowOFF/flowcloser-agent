@@ -333,6 +333,10 @@ export async function askWithFallback(
 			channel: agentContext.channel,
 			userId: agentContext.userId,
 		});
+
+		// Disponibilizar contexto para tools (para Conversions API)
+		(globalThis as any).currentUserId = agentContext.userId;
+		(globalThis as any).currentChannel = agentContext.channel;
 		
 		const { runner } = await createAgentWithModel(model, agentContext);
 		agentResponse = await runner.ask(userMessage);

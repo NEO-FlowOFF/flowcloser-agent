@@ -28,7 +28,7 @@ Copie e cole cada variável manualmente no Railway:
   "OPENAI_PROJECT_ID": "proj_MTlevvRFUIPEO3n5ZPCWPQ3r",
   "PORT": "8042",
   "WEBHOOK_VERIFY_TOKEN": "flowcloser_webhook_neo",
-  "OPENAI_API_KEY": "your_openai_api_key_here",
+  "OPENAI_API_KEY": "sua_chave_openai_aqui",
   "GOOGLE_API_KEY": "your_google_api_key_here",
   "RAILWAY_URL": "https://railway.com/project/95ed3bcd-2e20-4477-b50c-43cd9ec04c41",
   "INSTAGRAM_APP_ID": "2706639773011042",

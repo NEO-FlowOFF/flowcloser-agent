@@ -64,6 +64,7 @@ Marque **APENAS** estas opções:
   - **Require last push approval:** ❌ (deixar desmarcado)
 
 #### ⚠️ Require status checks to pass
+
 - **Marcar:** ✅ (se você tiver GitHub Actions configurado)
 - **Se marcar:** Deixe a lista vazia por enquanto (pode adicionar depois)
 
