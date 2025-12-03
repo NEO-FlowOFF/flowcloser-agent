@@ -50,6 +50,56 @@ app.get("/api/webhooks/instagram", (req, res) => {
 	}
 });
 
+/**
+ * Envia mensagem de volta para o Instagram via Graph API
+ */
+async function sendInstagramMessage(recipientId: string, messageText: string): Promise<void> {
+	const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
+	const pageId = process.env.INSTAGRAM_PAGE_ID; // Opcional: ID da página se necessário
+
+	if (!accessToken) {
+		console.warn("⚠️ INSTAGRAM_ACCESS_TOKEN não configurado, não é possível enviar mensagem");
+		return;
+	}
+
+	try {
+		// Instagram Graph API endpoint para enviar mensagens
+		// Para Instagram, usamos o endpoint do Instagram Business Account
+		// Se tiver INSTAGRAM_PAGE_ID, use ele, senão use 'me'
+		const pageId = process.env.INSTAGRAM_PAGE_ID || "me";
+		const url = `https://graph.facebook.com/v18.0/${pageId}/messages?access_token=${accessToken}`;
+		
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				messaging_type: "RESPONSE",
+				recipient: {
+					id: recipientId,
+				},
+				message: {
+					text: messageText,
+				},
+			}),
+		});
+
+		const data = (await response.json()) as {
+			error?: { message?: string; code?: number };
+			message_id?: string;
+		};
+
+		if (data.error) {
+			console.error("❌ Erro ao enviar mensagem Instagram:", data.error);
+		} else {
+			console.log(`✅ Mensagem enviada para ${recipientId}`);
+		}
+	} catch (error) {
+		console.error("❌ Erro ao enviar mensagem Instagram:", error);
+	}
+}
+
 app.post("/api/webhooks/instagram", async (req, res) => {
 	try {
 		const body = req.body;
@@ -74,6 +124,9 @@ app.post("/api/webhooks/instagram", async (req, res) => {
 								},
 							});
 							console.log(`✅ Response: ${responseText}`);
+							
+							// Enviar resposta de volta para o Instagram
+							await sendInstagramMessage(senderId, responseText);
 						} catch (error) {
 							console.error("Error processing message:", error);
 						}
