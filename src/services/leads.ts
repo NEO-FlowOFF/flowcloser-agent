@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
+import * as os from "node:os";
 import { MetaPlatform } from "../config/accounts.js";
 
 export interface LeadRecord {
@@ -63,6 +64,51 @@ export interface LeadMetrics {
 
 const dataDir = path.join(process.cwd(), "data");
 const leadsFile = path.join(dataDir, "leads.json");
+
+type StorachaClient = {
+	uploadFile: (file: any, options?: any) => Promise<any>;
+	uploadDirectory: (files: any, options?: any) => Promise<any>;
+	addSpace: (proof: any) => Promise<{ did: () => string }>;
+	setCurrentSpace: (did: string) => Promise<void>;
+	currentSpace?: () => string;
+};
+
+let storachaClientPromise: Promise<StorachaClient> | null = null;
+
+function normalizeStorachaUcanToken(value: string): string {
+	// Remover espaços / quebras de linha e normalizar base64url -> base64
+	let token = value.replace(/\s+/g, "").trim();
+	token = token.replace(/-/g, "+").replace(/_/g, "/");
+	while (token.length % 4 !== 0) token += "=";
+	return token;
+}
+
+async function getStorachaClient(): Promise<StorachaClient> {
+	if (storachaClientPromise) return storachaClientPromise;
+
+	storachaClientPromise = (async () => {
+		const Storacha = await import("@storacha/client");
+		const client = (await (Storacha as any).create()) as StorachaClient;
+
+		const ucanRaw = process.env.STORACHA_UCAN;
+		const spaceDid = process.env.STORACHA_SPACE_DID;
+
+		if (ucanRaw) {
+			const normalized = normalizeStorachaUcanToken(ucanRaw);
+			// Proof.parse é exportado via subpath @storacha/client/proof
+			const Proof = await import("@storacha/client/proof");
+			const proof = await (Proof as any).parse(normalized);
+			const space = await client.addSpace(proof);
+			await client.setCurrentSpace(space.did());
+		} else if (spaceDid) {
+			await client.setCurrentSpace(spaceDid);
+		}
+
+		return client;
+	})();
+
+	return storachaClientPromise;
+}
 
 function ensureLeadsFile() {
 	if (!fs.existsSync(dataDir)) {
@@ -140,34 +186,40 @@ function startOfTodayIso(): string {
 }
 
 export async function uploadLeadToIpfs(payload: LeadRecord): Promise<string | null> {
-	const apiKey = process.env.VITE_LIGHTHOUSE_API_KEY || process.env.LIGHTHOUSE_API_KEY;
-
-	if (!apiKey) {
-		console.warn("⚠️ VITE_LIGHTHOUSE_API_KEY não configurada; pulando upload para IPFS");
-		return null;
-	}
-
 	try {
-		const formData = new FormData();
-		const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-		formData.append("file", blob, `lead-${payload.user_platform_id}-${Date.now()}.json`);
+		const ucan = process.env.STORACHA_UCAN;
+		const spaceDid = process.env.STORACHA_SPACE_DID;
 
-		const response = await fetch("https://api.lighthouse.storage/api/v0/add", {
-			method: "POST",
-			headers: {
-				Authorization: `Bearer ${apiKey}`,
-			},
-			body: formData,
-		});
-
-		const data = (await response.json()) as { Hash?: string; error?: any };
-		if (response.ok && data?.Hash) {
-			return data.Hash;
+		if (!ucan && !spaceDid) {
+			console.warn("⚠️ STORACHA_UCAN/STORACHA_SPACE_DID não configurados; pulando upload para IPFS (Storacha)");
+			return null;
 		}
 
-		console.warn("⚠️ Falha ao subir lead para Lighthouse:", data);
+		const client = await getStorachaClient();
+		const json = JSON.stringify(payload, null, 2);
+		const fileName = `lead-${payload.user_platform_id}-${Date.now()}.json`;
+
+		// Preferir upload direto em memória (quando File existir)
+		const FileCtor = (globalThis as any).File;
+		if (typeof FileCtor === "function") {
+			const file = new FileCtor([new Blob([json], { type: "application/json" })], fileName, {
+				type: "application/json",
+			});
+			const cid = await client.uploadFile(file, client.currentSpace ? { space: client.currentSpace() } : undefined);
+			return String(cid);
+		}
+
+		// Fallback: escrever em arquivo temporário e subir como diretório
+		const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "flowcloser-storacha-"));
+		const tmpFile = path.join(tmpDir, fileName);
+		await fs.promises.writeFile(tmpFile, json, "utf-8");
+
+		const { filesFromPaths } = await import("files-from-path");
+		const files = await filesFromPaths([tmpFile]);
+		const cid = await client.uploadDirectory(files, client.currentSpace ? { space: client.currentSpace() } : undefined);
+		return String(cid);
 	} catch (error) {
-		console.warn("⚠️ Erro ao subir lead para Lighthouse:", error);
+		console.warn("⚠️ Erro ao subir lead para Storacha:", error);
 	}
 
 	return null;
@@ -200,7 +252,7 @@ export async function recordLeadInteraction(input: LeadUpsertInput): Promise<voi
 
 	await persistLeads(leads);
 
-	// Upload assíncrono para IPFS (Lighthouse)
+	// Upload assíncrono para IPFS (Storacha)
 	const cid = await uploadLeadToIpfs(record);
 	if (cid) {
 		const idx = leads.findIndex(

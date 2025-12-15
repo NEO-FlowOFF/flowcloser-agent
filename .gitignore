@@ -6,7 +6,7 @@ dist/
 data/
 .adk-cache
 .DS_Store
-
+docs/
 # Arquivos com informações sensíveis
 railway-variables.json
 *_variables.json

@@ -126,7 +126,7 @@ app.get("/api/leads", async (req, res) => {
 			count: leadResult.count,
 			metrics,
 			filters,
-			storage: "ipfs_lighthouse",
+			storage: "ipfs_storacha",
 		});
 	} catch (error) {
 		console.error("Error listing leads:", error);
@@ -136,7 +136,7 @@ app.get("/api/leads", async (req, res) => {
 
 app.get("/dashboard", async (req, res) => {
 	try {
-		const lighthouseConfigured = Boolean(process.env.VITE_LIGHTHOUSE_API_KEY || process.env.LIGHTHOUSE_API_KEY);
+		const storachaConfigured = Boolean(process.env.STORACHA_UCAN || process.env.STORACHA_SPACE_DID);
 		const filters = {
 			account_name: (req.query.account_name as string | undefined) || undefined,
 			page_id: (req.query.page_id as string | undefined) || undefined,
@@ -206,7 +206,7 @@ app.get("/dashboard", async (req, res) => {
 				<div class="meta">
 					<span>Auto-refresh a cada 30s</span>
 					<span>•</span>
-					<span>${lighthouseConfigured ? "Lighthouse IPFS ativo" : "Configure VITE_LIGHTHOUSE_API_KEY"}</span>
+					<span>${storachaConfigured ? "Storacha IPFS ativo" : "Configure STORACHA_UCAN/STORACHA_SPACE_DID"}</span>
 				</div>
 				<div class="grid">
 					<div class="card">
