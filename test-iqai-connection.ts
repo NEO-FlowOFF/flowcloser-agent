@@ -9,25 +9,25 @@ const IQAI_API_BASE_URL = "https://api.iqai.com";
 
 async function testRESTAPI(apiKey: string) {
 	console.log("📡 Testando API REST do IQ AI...\n");
-	
+
 	try {
 		// Testar endpoint GET /api/agents/info com o endereço do agente FlowCloser
 		// Agent Contract: 0x6C3E3a7aE71AFaf30C89471Cf3080b62a1ad41E4
 		// Token Contract: 0x2Dd669407Ab779724f2b38b54A4322aA40C55e67
 		const agentAddress = "0x6C3E3a7aE71AFaf30C89471Cf3080b62a1ad41E4";
-		
+
 		// Tentar diferentes endpoints possíveis
 		const endpoints = [
 			`${IQAI_API_BASE_URL}/api/agents/info?address=${agentAddress}`,
 			`${IQAI_API_BASE_URL}/api/agent/info?address=${agentAddress}`,
 			`${IQAI_API_BASE_URL}/api/agents?address=${agentAddress}`,
 		];
-		
+
 		let success = false;
 		for (const url of endpoints) {
 			try {
 				console.log(`🔄 Tentando: ${url}`);
-				
+
 				const response = await fetch(url, {
 					method: "GET",
 					headers: {
@@ -57,12 +57,12 @@ async function testRESTAPI(apiKey: string) {
 				console.log(`   Erro: ${err instanceof Error ? err.message : String(err)}`);
 			}
 		}
-		
+
 		if (!success) {
 			console.log("\n💡 Nota: A API REST pode ter endpoints diferentes ou requerer configuração adicional.");
 			console.log("   O teste do ADK abaixo é mais confiável para verificar a conexão.");
 		}
-		
+
 		return success;
 	} catch (error) {
 		console.error("❌ Erro ao testar API REST:");
@@ -79,7 +79,7 @@ async function testIQAIConnection() {
 
 	// 1. Verificar se a chave de API está configurada
 	const apiKey = process.env.IQAI_API_KEY;
-	
+
 	if (!apiKey) {
 		console.error("❌ ERRO: IQAI_API_KEY não encontrada no arquivo .env");
 		console.log("💡 Configure a variável IQAI_API_KEY no arquivo .env");
@@ -94,7 +94,7 @@ async function testIQAIConnection() {
 
 	console.log(`✅ Chave de API encontrada: ${apiKey}`);
 	console.log(`   Formato: ${apiKey.substring(0, 8)}...${apiKey.substring(apiKey.length - 4)}`);
-	
+
 	// Garantir que a chave está disponível como variável de ambiente para o ADK
 	process.env.IQAI_API_KEY = apiKey;
 
@@ -105,7 +105,7 @@ async function testIQAIConnection() {
 	// 3. Tentar criar um agente de teste usando ADK
 	console.log("\n" + "─".repeat(60));
 	console.log("🔄 Testando ADK (Agent Development Kit)...\n");
-	
+
 	try {
 		// Usar exatamente o mesmo método que o agente real usa
 		function getSqliteConnectionString(dbName: string): string {
@@ -114,13 +114,13 @@ async function testIQAIConnection() {
 			if (!fs.existsSync(dbDir)) {
 				fs.mkdirSync(dbDir, { recursive: true });
 			}
-			return `sqlite:${dbPath}`;
+			return `sqlite://${dbPath}`;
 		}
-		
+
 		const connectionString = getSqliteConnectionString("test-connection");
 		const dbPath = path.join(process.cwd(), "data", "test-connection.db");
 		console.log(`💾 Banco de dados: ${connectionString}`);
-		
+
 		console.log("🔄 Criando serviço de sessão...");
 		const sessionService = createDatabaseSessionService(connectionString);
 		console.log("✅ Serviço de sessão criado");
@@ -149,7 +149,7 @@ async function testIQAIConnection() {
 		console.log(`📥 Resposta: "${response}"\n`);
 
 		console.log("✅ ADK funcionando corretamente!");
-		
+
 		// Limpar arquivo de teste
 		if (fs.existsSync(dbPath)) {
 			fs.unlinkSync(dbPath);
@@ -164,14 +164,14 @@ async function testIQAIConnection() {
 		console.log(`   🤖 Modelo: ${model}`);
 		console.log(`   🌐 Status: Conectado`);
 		console.log("═".repeat(60));
-		
+
 		process.exit(0);
 	} catch (error) {
 		console.error("\n❌ ERRO ao testar ADK:");
-		
+
 		if (error instanceof Error) {
 			console.error(`   Mensagem: ${error.message}`);
-			
+
 			// Verificar erros comuns
 			if (error.message.includes("API key") || error.message.includes("authentication")) {
 				console.error("\n💡 Possíveis soluções:");
