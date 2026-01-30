@@ -14,10 +14,8 @@ An autonomous agent engineered to convert friction into trust, and leads into se
 - **Website**: [flowoff.xyz](https://flowoff.xyz)
 - **Deployment**: https://flowcloser-agent-production.up.railway.app
 
-## 📚 Documentação
-
-- **[INSTRUCOES.md](./INSTRUCOES.md)** - Guia completo de instalação, configuração e deploy
-- **[TESTES.md](./TESTES.md)** - Guia completo de testes da API e endpoints
+- **[📚 Central de Documentação](./docs/README.md)** - Guia completo, análises, setups e manuais.
+- **[📍 Swagger Docs (API)](https://flowcloser-agent-production.up.railway.app/api-docs)** - Documentação interativa dos endpoints.
 
 ## 🚀 Quick Start
 
