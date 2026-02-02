@@ -263,6 +263,16 @@ export async function recordLeadInteraction(input: LeadUpsertInput): Promise<voi
 			await persistLeads(leads);
 		}
 	}
+
+	// NΞØ PROTOCOL: Sync to Notion CRM
+	// Import dynamically to avoid top-level issues if file missing, or just assume it exists
+	try {
+		const { syncLeadToNotion } = await import("./notion.js");
+		// Fire and forget (don't await to not block response time)
+		syncLeadToNotion(record).catch(err => console.error("Async Notion Sync Failed:", err));
+	} catch (e) {
+		console.warn("⚠️ Notion service not found or failed to load");
+	}
 }
 
 export async function listLeads(filters: LeadFilters = {}): Promise<{ leads: LeadRecord[]; count: number }> {
